@@ -3,7 +3,7 @@
 -- @Link   : https://dengsir.github.io
 -- @Date   : 6/7/2021, 12:16:52 AM
 --
-local MAJOR, MINOR = 'LibTooltipExtra-1.0', 1
+local MAJOR, MINOR = 'LibTooltipExtra-1.0', 2
 
 ---@class LibTooltipExtra-1.0
 local Lib = LibStub:NewLibrary(MAJOR, MINOR)
@@ -14,9 +14,11 @@ end
 ---@class LibGameTooltip: GameTooltip
 local Tip = Lib.Tip or {}
 local TipMeta = Lib.TipMeta or {__index = Tip}
+local TipCache = Lib.TipCache or setmetatable({}, {__mode = 'kv'})
 
 Lib.Tip = Tip
 Lib.TipMeta = TipMeta
+Lib.TipCache = TipCache
 
 _G.GameTooltipText:SetSpacing(2)
 
@@ -53,12 +55,20 @@ end
 
 ---@return LibGameTooltip
 function Tip:New(tip)
-    local obj = {}
-    obj[0] = tip[0]
-    obj.tip = tip
-    obj.l = generateCache(tip:GetName(), 'TextLeft')
-    obj.r = generateCache(tip:GetName(), 'TextRight')
-    return setmetatable(obj, TipMeta)
+    if TipCache[tip] then
+        return TipCache[tip]
+    end
+
+    local obj = setmetatable({}, TipMeta)
+    self.Ctor(obj, tip)
+    return obj
+end
+
+function Tip:Ctor(tip)
+    self[0] = tip[0]
+    self.tip = tip
+    self.l = generateCache(tip:GetName(), 'TextLeft')
+    self.r = generateCache(tip:GetName(), 'TextRight')
 end
 
 function Tip:GetFontStringLeft(n)

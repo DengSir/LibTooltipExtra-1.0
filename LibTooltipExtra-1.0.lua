@@ -3,7 +3,7 @@
 -- @Link   : https://dengsir.github.io
 -- @Date   : 6/7/2021, 12:16:52 AM
 --
-local MAJOR, MINOR = 'LibTooltipExtra-1.0', 3
+local MAJOR, MINOR = 'LibTooltipExtra-1.0', 4
 
 ---@class LibTooltipExtra-1.0
 local Lib = LibStub:NewLibrary(MAJOR, MINOR)
@@ -14,7 +14,13 @@ end
 ---@class LibGameTooltip: GameTooltip
 local Tip = Lib.Tip or {}
 local TipMeta = Lib.TipMeta or {__index = Tip}
-local TipCache = Lib.TipCache or setmetatable({}, {__mode = 'kv'})
+local TipCache = Lib.TipCache or setmetatable({}, {
+    __mode = 'k',
+    __index = function(t, k)
+        t[k] = Tip:New(k)
+        return t[k]
+    end,
+})
 
 Lib.Tip = Tip
 Lib.TipMeta = TipMeta
@@ -54,6 +60,12 @@ function Lib.SetTooltipMoney(tip)
 end
 
 ---- Tip
+
+function Tip:New(tip)
+    local obj = setmetatable({}, TipMeta)
+    obj:Ctor(tip)
+    return obj
+end
 
 function Tip:Ctor(tip)
     self[0] = tip[0]
@@ -106,13 +118,7 @@ end
 ---@param tip GameTooltip
 ---@return LibGameTooltip
 function Lib:New(tip)
-    if TipCache[tip] then
-        return TipCache[tip]
-    end
-
-    local obj = setmetatable({}, TipMeta)
-    Tip.Ctor(obj, tip)
-    return obj
+    return TipCache[tip]
 end
 
 ---@type LibGameTooltip

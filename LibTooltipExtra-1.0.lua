@@ -3,7 +3,7 @@
 -- @Link   : https://dengsir.github.io
 -- @Date   : 6/7/2021, 12:16:52 AM
 --
-local MAJOR, MINOR = 'LibTooltipExtra-1.0', 2
+local MAJOR, MINOR = 'LibTooltipExtra-1.0', 3
 
 ---@class LibTooltipExtra-1.0
 local Lib = LibStub:NewLibrary(MAJOR, MINOR)
@@ -53,16 +53,7 @@ function Lib.SetTooltipMoney(tip)
     moneyFrame:SetPoint('BOTTOMLEFT', r, 'BOTTOMLEFT', x, 0)
 end
 
----@return LibGameTooltip
-function Tip:New(tip)
-    if TipCache[tip] then
-        return TipCache[tip]
-    end
-
-    local obj = setmetatable({}, TipMeta)
-    self.Ctor(obj, tip)
-    return obj
-end
+---- Tip
 
 function Tip:Ctor(tip)
     self[0] = tip[0]
@@ -111,5 +102,18 @@ function Tip:AppendLineFrontRight(toLine, text)
     return self:AppendLineFront(toLine, nil, text)
 end
 
+---- Lib
+---@param tip GameTooltip
+---@return LibGameTooltip
+function Lib:New(tip)
+    if TipCache[tip] then
+        return TipCache[tip]
+    end
+
+    local obj = setmetatable({}, TipMeta)
+    Tip.Ctor(obj, tip)
+    return obj
+end
+
 ---@type LibGameTooltip
-Lib.GameTooltip = Tip:New(GameTooltip)
+Lib.GameTooltip = Lib:New(GameTooltip)

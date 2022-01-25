@@ -3,7 +3,7 @@
 -- @Link   : https://dengsir.github.io
 -- @Date   : 6/7/2021, 12:16:52 AM
 --
-local MAJOR, MINOR = 'LibTooltipExtra-1.0', 5
+local MAJOR, MINOR = 'LibTooltipExtra-1.0', 6
 
 ---@class LibTooltipExtra-1.0
 local Lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
@@ -31,7 +31,7 @@ local TipCache = Lib.TipCache or setmetatable({}, {
 Lib.Tip = Tip
 Lib.TipCache = TipCache
 
-if oldminor < 5 then
+if oldminor and oldminor < 5 then
     Lib.TipMeta = nil
     setmetatable(Tip, nil)
 end

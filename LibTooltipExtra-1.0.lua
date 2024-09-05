@@ -97,7 +97,7 @@ function Tip:GetFontStrings(n)
     return self.l[n], self.r[n]
 end
 
----@return TooltipMoneyFrameTemplate
+---@return Frame
 function Tip:GetMoneyFrame(n)
     return self.m[n]
 end
@@ -111,8 +111,8 @@ local function AddFront(object, text)
 end
 
 ---@param toLine integer
----@param textLeft string
----@param textRight string
+---@param textLeft string | nil
+---@param textRight string | nil
 function Tip:AppendLineFront(toLine, textLeft, textRight)
     if self:NumLines() >= toLine then
         local fontLeft, fontRight = self:GetFontStrings(toLine)

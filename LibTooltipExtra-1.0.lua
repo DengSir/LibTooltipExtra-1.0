@@ -3,7 +3,7 @@
 -- @Link   : https://dengsir.github.io
 -- @Date   : 6/7/2021, 12:16:52 AM
 --
-local MAJOR, MINOR = 'LibTooltipExtra-1.0', 8
+local MAJOR, MINOR = 'LibTooltipExtra-1.0', 9
 
 ---@class LibTooltipExtra-1.0
 local Lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
@@ -145,6 +145,14 @@ function Tip:AddEmptyLine()
         return
     end
     self:AddLine(' ')
+end
+
+function Tip:SetBorderColor(r, g, b)
+    if self.SetBackdropBorderColor then
+        self:SetBackdropBorderColor(r, g, b)
+    elseif self.NineSlice and self.NineSlice.SetBorderColor then
+        self.NineSlice:SetBorderColor(r, g, b)
+    end
 end
 
 ---- Lib
